@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String             @id @default(uuid())
+  auth0Id           String             @unique
+  rating            Int
+  battles           UsersOnBattles[]
+  battlesWon        BattleResult[]
+  battleEvaluations BattleEvaluation[]
+  battleInvitation  BattleInvitation[]
+  submissions       Submission[]
+}
+
+model TestCase {
+  id        String           @id @default(uuid())
+  input     String
+  output    String
+  order     Int
+  problemId String
+  problem   Problem          @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  tests     SubmissionTest[]
+}
+
+model Problem {
+  id             String     @id @default(uuid())
+  prompt         String
+  inputFormat    String
+  outputFormat   String
+  exampleCount   Int
+  reviewVideoURL String
+  reviewText     String
+  testCases      TestCase[]
+  battles        Battle[]
+}
+
+model BattleInvitation {
+  id         String @id @default(uuid())
+  userId     String
+  inviteCode String @unique
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Battle {
+  id          String           @id @default(uuid())
+  inviteCode  String           @unique
+  problemId   String
+  problem     Problem          @relation(fields: [problemId], references: [id])
+  users       UsersOnBattles[]
+  startTime   DateTime
+  endTime     DateTime
+  submissions Submission[]
+  result      BattleResult?
+}
+
+model Submission {
+  id          String           @id @default(uuid())
+  userId      String
+  battleId    String
+  submittedAt DateTime         @default(now())
+  code        String
+  input       String
+  type        String
+  tests       SubmissionTest[]
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  battle      Battle           @relation(fields: [battleId], references: [id], onDelete: Cascade)
+}
+
+model SubmissionTest {
+  id           String     @id @default(uuid())
+  submissionId String
+  testCaseId   String
+  order        Int
+  output       String
+  outputType   String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  testCase     TestCase   @relation(fields: [testCaseId], references: [id], onDelete: Cascade)
+}
+
+model UsersOnBattles {
+  battleId      String
+  userId        String
+  readyToBattle Boolean @default(false)
+  battle        Battle  @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([battleId, userId])
+}
+
+model BattleEvaluation {
+  id           String       @id @default(uuid())
+  userId       String
+  correctness  Int
+  performance  Int
+  time         Int
+  resultId     String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  battleResult BattleResult @relation(fields: [resultId], references: [id], onDelete: Cascade)
+}
+
+model BattleResult {
+  id           String             @id @default(uuid())
+  battleId     String             @unique
+  winnerId     String
+  score        Int
+  evaluationId String
+  battle       Battle             @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  winner       User               @relation(fields: [winnerId], references: [id], onDelete: Cascade)
+  evaluations  BattleEvaluation[]
+}
