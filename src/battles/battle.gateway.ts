@@ -6,7 +6,7 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { BattleService } from './battle.service';
-import { JoinBattleDto, CreateBattleDto } from './dto';
+import { JoinBattleDto, ExchangeIdDto, CreateBattleInvitationDto } from './dto';
 import auth0Middleware from './authentication-gateway.middleware';
 
 @WebSocketGateway({ namespace: 'battle', cors: true })
@@ -33,24 +33,24 @@ export class BattleGateway {
     @SubscribeMessage('exchangeId')
     async handleExchangeId(
         client: Socket,
-        auth0Id: string,
+        data: ExchangeIdDto,
     ): Promise<WsResponse<unknown>> {
-        const user = await this.battleService.getOrCreateUser(auth0Id);
+        const user = await this.battleService.getOrCreateUser(data.auth0Id);
         console.log(user.id);
 
         return { event: 'idExchanged', data: { userId: user.id } };
     }
 
-    @SubscribeMessage('createBattle')
+    @SubscribeMessage('createBattleInvitation')
     async handleCreateBattleInvitation(
         client: Socket,
-        data: CreateBattleDto,
+        data: CreateBattleInvitationDto,
     ): Promise<WsResponse<unknown>> {
         const battleInvitation =
             await this.battleService.createBattleInvitation(data.userId);
         console.log(battleInvitation);
         client.join(battleInvitation.inviteCode);
-        return { event: 'battleCreated', data: battleInvitation };
+        return { event: 'battleInvitationCreated', data: battleInvitation };
     }
 
     @SubscribeMessage('joinBattle')
@@ -80,33 +80,32 @@ export class BattleGateway {
             const users = await this.battleService.getUsersOnBattleById(
                 newBattle.id,
             );
-            client
-                .to(inviteCode)
-                .emit('opponentFound', {
-                    battle: newBattle,
-                    problemAndExample,
-                    users,
-                });
+            const response: any = newBattle;
+            console.log(response);
+            response.problem = problemAndExample;
+            response.users = users;
+            client.to(inviteCode).emit('opponentFound', {
+                battle: response,
+            });
             return {
                 event: 'battleJoined',
-                data: { battle: newBattle, problemAndExample, users },
+                data: { battle: response },
             };
         }
 
         // Battle is already started, rejoin the battle if the user was part of the battle
         if (await this.battleService.isBattleJoinable(battle, userId)) {
             client.join(inviteCode);
-            const problemAndExample =
-                await this.battleService.getProblemAndExampleById(
-                    battle.problemId,
-                );
+            const problem = await this.battleService.getProblemAndExampleById(
+                battle.problemId,
+            );
+            const response: any = battle;
+            response.problem = problem;
             client.to(inviteCode).emit('opponentRejoined');
             return {
                 event: 'battleRejoined',
                 data: {
-                    battle,
-                    problemAndExample,
-                    users: battle.users,
+                    battle: response,
                 },
             };
         }

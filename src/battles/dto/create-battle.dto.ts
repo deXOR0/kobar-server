@@ -1,4 +1,3 @@
-export class CreateBattleDto {
+export class CreateBattleInvitationDto {
     readonly userId: string;
-    readonly battleType: string;
 }
