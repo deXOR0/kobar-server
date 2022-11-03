@@ -13,6 +13,7 @@ import {
     ReadyBattleDto,
     CancelBattleDto,
     RunCodeDto,
+    SubmitCodeDto,
 } from './dto';
 import auth0Middleware from './authentication-gateway.middleware';
 
@@ -177,5 +178,33 @@ export class BattleGateway {
                 data: { type: 'error', output: String(err) },
             };
         }
+    }
+
+    @SubscribeMessage('submitCode')
+    async handleSubmitCode(client: Socket, data: SubmitCodeDto) {
+        const { userId, battleId, problemId, code } = data;
+
+        const battle = await this.battleService.getBattleById(battleId);
+
+        const testCases = await this.battleService.getTestCasesById(
+            battle.problemId,
+        );
+
+        const response = await this.battleService.submitCode(
+            userId,
+            battleId,
+            problemId,
+            code,
+            testCases,
+        );
+
+        const battleDone = await this.battleService.checkBattleDone(battleId);
+
+        if (battleDone) {
+            this.server.to(battle.inviteCode).emit('battleFinished');
+        } else {
+            client.to(battle.inviteCode).emit('opponentSubmittedCode');
+        }
+        return { event: 'codeSubmitted', data: response };
     }
 }

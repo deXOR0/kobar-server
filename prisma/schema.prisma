@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -68,8 +68,6 @@ model Submission {
   battleId    String
   submittedAt DateTime         @default(now())
   code        String
-  input       String
-  type        String
   tests       SubmissionTest[]
   user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   battle      Battle           @relation(fields: [battleId], references: [id], onDelete: Cascade)

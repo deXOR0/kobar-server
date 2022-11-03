@@ -1,6 +1,7 @@
 export class SubmitCodeDto {
     readonly userId: string;
     readonly battleId: string;
+    readonly problemId: string;
     readonly code: string;
 }
 

@@ -5,7 +5,9 @@ import {
     User as UserModel,
     Battle as BattleModel,
     BattleInvitation as BattleInvitationModel,
-    UsersOnBattles as UsersOnBattlesModel,
+    TestCase as TestCaseModel,
+    Submission as SubmissionModel,
+    SubmissionTest as SubmissionTestModel,
 } from '@prisma/client';
 import { ProblemsService } from 'src/problems/problems.service';
 import { exec } from 'child_process';
@@ -330,10 +332,7 @@ export class BattleService {
         let correct = false;
         let testedAtLeastOnce = false;
 
-        console.log(examples);
-
         examples.testCases.forEach((example) => {
-            console.log(example.output);
             if (example.input === input) {
                 testedAtLeastOnce = true;
                 if (example.output === output) {
@@ -344,5 +343,123 @@ export class BattleService {
         });
 
         return !testedAtLeastOnce || correct ? 'correct' : 'incorrect';
+    }
+
+    async getTestCasesById(problemId: string) {
+        return await this.problemsService.getTestCasesById(problemId);
+    }
+
+    async createSubmission(
+        userId: string,
+        battleId: string,
+        code: string,
+    ): Promise<SubmissionModel> {
+        return await this.prismaService.submission.create({
+            data: {
+                code,
+                user: {
+                    connect: {
+                        id: userId,
+                    },
+                },
+                battle: {
+                    connect: {
+                        id: battleId,
+                    },
+                },
+            },
+        });
+    }
+
+    async createSubmissionTest(
+        submission: SubmissionModel,
+        testCase: TestCaseModel,
+    ): Promise<SubmissionTestModel> {
+        let output: string;
+        let outputType: string;
+
+        try {
+            output = await this.runCode(submission.code, testCase.input);
+            outputType = testCase.output === output ? 'correct' : 'incorrect';
+        } catch (err) {
+            output = String(err);
+            outputType = 'error';
+        }
+
+        return await this.prismaService.submissionTest.create({
+            data: {
+                order: testCase.order,
+                output,
+                outputType,
+                submission: {
+                    connect: {
+                        id: submission.id,
+                    },
+                },
+                testCase: {
+                    connect: {
+                        id: testCase.id,
+                    },
+                },
+            },
+        });
+    }
+
+    async submitCode(
+        userId: string,
+        battleId: string,
+        problemId: string,
+        code: string,
+        testCases: TestCaseModel[],
+    ) {
+        const submission = await this.createSubmission(userId, battleId, code);
+
+        const submissionTests = await Promise.all(
+            testCases.map(async (testCase) => {
+                return await this.createSubmissionTest(submission, testCase);
+            }),
+        );
+
+        const tests = await Promise.all(
+            submissionTests.map(async (test) => {
+                const testCase = await this.problemsService.getTestCaseById(
+                    test.testCaseId,
+                );
+                return {
+                    output: test.output,
+                    outputType: test.outputType,
+                    testCase: {
+                        input: testCase.input,
+                        output: testCase.output,
+                    },
+                };
+            }),
+        );
+
+        const problem = await this.problemsService.getProblemReviewById(
+            problemId,
+        );
+
+        return {
+            code,
+            tests,
+            problem,
+        };
+    }
+
+    async getSubmissionsByBattleId(
+        battleId: string,
+    ): Promise<SubmissionModel[]> {
+        return await this.prismaService.submission.findMany({
+            where: {
+                battleId,
+            },
+        });
+    }
+
+    async checkBattleDone(battleId: string) {
+        const submissions = await this.getSubmissionsByBattleId(battleId);
+
+        return submissions.length >= 2;
     }
 }

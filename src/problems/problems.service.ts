@@ -85,4 +85,32 @@ export class ProblemsService {
             },
         });
     }
+
+    async getTestCasesById(problemId: string) {
+        return await this.prismaService.testCase.findMany({
+            where: {
+                problemId,
+            },
+        });
+    }
+
+    async getTestCaseById(testCaseId: string) {
+        return await this.prismaService.testCase.findUnique({
+            where: {
+                id: testCaseId,
+            },
+        });
+    }
+
+    async getProblemReviewById(problemId: string) {
+        return await this.prismaService.problem.findUnique({
+            where: {
+                id: problemId,
+            },
+            select: {
+                reviewVideoURL: true,
+                reviewText: true,
+            },
+        });
+    }
 }
