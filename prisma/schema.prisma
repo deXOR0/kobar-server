@@ -108,12 +108,11 @@ model BattleEvaluation {
 }
 
 model BattleResult {
-  id           String             @id @default(uuid())
-  battleId     String             @unique
-  winnerId     String
-  score        Int
-  evaluationId String
-  battle       Battle             @relation(fields: [battleId], references: [id], onDelete: Cascade)
-  winner       User               @relation(fields: [winnerId], references: [id], onDelete: Cascade)
-  evaluations  BattleEvaluation[]
+  id          String             @id @default(uuid())
+  battleId    String             @unique
+  winnerId    String
+  score       Int
+  battle      Battle             @relation(fields: [battleId], references: [id], onDelete: Cascade)
+  winner      User               @relation(fields: [winnerId], references: [id], onDelete: Cascade)
+  evaluations BattleEvaluation[]
 }

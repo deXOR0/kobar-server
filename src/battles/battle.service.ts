@@ -221,4 +221,69 @@ export class BattleService {
             },
         });
     }
+
+    async updateBattleTimestamps(battleId: string) {
+        let date = new Date();
+        const startTime = new Date(date.setSeconds(date.getSeconds()));
+        const endTime = new Date(
+            date.setMinutes(startTime.getMinutes() + this.BATTLE_DURATION_MIN),
+        );
+        await this.prismaService.battle.update({
+            where: {
+                id: battleId,
+            },
+            data: {
+                startTime,
+                endTime,
+            },
+        });
+    }
+
+    async isBattleStarted(battleId: string): Promise<Boolean> {
+        const usersOnBattleWhoseReady =
+            await this.prismaService.usersOnBattles.findMany({
+                where: {
+                    battleId,
+                    readyToBattle: true,
+                },
+            });
+
+        return usersOnBattleWhoseReady.length >= 2;
+    }
+
+    async readyBattle(battleId: string, userId: string): Promise<Boolean> {
+        await this.prismaService.usersOnBattles.update({
+            where: {
+                battleId_userId: {
+                    battleId,
+                    userId,
+                },
+            },
+            data: {
+                readyToBattle: true,
+            },
+        });
+
+        if (await this.isBattleStarted(battleId)) {
+            await this.updateBattleTimestamps(battleId);
+            return true;
+        }
+        return false;
+    }
+
+    async deleteBattleInvitationByInvitationCode(inviteCode) {
+        await this.prismaService.battleInvitation.delete({
+            where: {
+                inviteCode,
+            },
+        });
+    }
+
+    async deleteBattleById(battleId: string): Promise<BattleModel> {
+        return await this.prismaService.battle.delete({
+            where: {
+                id: battleId,
+            },
+        });
+    }
 }

@@ -73,6 +73,7 @@ CREATE TABLE "SubmissionTest" (
 CREATE TABLE "UsersOnBattles" (
     "battleId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "readyToBattle" BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY ("battleId", "userId"),
     CONSTRAINT "UsersOnBattles_battleId_fkey" FOREIGN KEY ("battleId") REFERENCES "Battle" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
@@ -97,7 +98,6 @@ CREATE TABLE "BattleResult" (
     "battleId" TEXT NOT NULL,
     "winnerId" TEXT NOT NULL,
     "score" INTEGER NOT NULL,
-    "evaluationId" TEXT NOT NULL,
     CONSTRAINT "BattleResult_battleId_fkey" FOREIGN KEY ("battleId") REFERENCES "Battle" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "BattleResult_winnerId_fkey" FOREIGN KEY ("winnerId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

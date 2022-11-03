@@ -39,7 +39,6 @@ export class ProblemsService {
             take: 1,
             skip,
         });
-        console.log(problem);
         return problem[0];
     }
 
