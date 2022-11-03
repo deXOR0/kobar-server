@@ -12,6 +12,7 @@ import {
     CreateBattleInvitationDto,
     ReadyBattleDto,
     CancelBattleDto,
+    RunCodeDto,
 } from './dto';
 import auth0Middleware from './authentication-gateway.middleware';
 
@@ -145,10 +146,36 @@ export class BattleGateway {
     async handleCancelBattle(client: Socket, data: CancelBattleDto) {
         const { battleId } = data;
         const battle = await this.battleService.deleteBattleById(battleId);
-        await this.battleService.deleteBattleInvitationByInvitationCode(
+        await this.battleService.deleteBattleInvitationByInviteCode(
             battle.inviteCode,
         );
 
         this.server.to(battle.inviteCode).emit('battleCancelled', { battleId });
+    }
+
+    @SubscribeMessage('runCode')
+    async handleRunCode(
+        client: Socket,
+        data: RunCodeDto,
+    ): Promise<WsResponse<unknown>> {
+        const { battleId, code, input } = data;
+
+        const battle = await this.battleService.getBattleById(battleId);
+
+        try {
+            client.to(battle.inviteCode).emit('opponentRunCode');
+            const output = await this.battleService.runCode(code, input);
+            const outputType = await this.battleService.checkRunCodeOutput(
+                battle.problemId,
+                input,
+                output,
+            );
+            return { event: 'codeRan', data: { type: outputType, output } };
+        } catch (err) {
+            return {
+                event: 'codeRan',
+                data: { type: 'error', output: String(err) },
+            };
+        }
     }
 }

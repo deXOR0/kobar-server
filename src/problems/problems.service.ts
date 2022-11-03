@@ -67,4 +67,22 @@ export class ProblemsService {
             },
         });
     }
+
+    async getExamplesById(problemId: string) {
+        const exampleCount = (await this.getProblemById(problemId))
+            .exampleCount;
+        return await this.prismaService.problem.findUnique({
+            where: {
+                id: problemId,
+            },
+            select: {
+                testCases: {
+                    take: exampleCount,
+                    orderBy: {
+                        order: 'asc',
+                    },
+                },
+            },
+        });
+    }
 }

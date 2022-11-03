@@ -8,6 +8,7 @@ import {
     UsersOnBattles as UsersOnBattlesModel,
 } from '@prisma/client';
 import { ProblemsService } from 'src/problems/problems.service';
+import { exec } from 'child_process';
 
 @Injectable()
 export class BattleService {
@@ -271,7 +272,7 @@ export class BattleService {
         return false;
     }
 
-    async deleteBattleInvitationByInvitationCode(inviteCode) {
+    async deleteBattleInvitationByInviteCode(inviteCode) {
         await this.prismaService.battleInvitation.delete({
             where: {
                 inviteCode,
@@ -285,5 +286,63 @@ export class BattleService {
                 id: battleId,
             },
         });
+    }
+
+    async runCode(code: string, input: string): Promise<string> {
+        return new Promise(function (resolve, reject) {
+            let inputArray = input.trim().split('\n');
+            if (
+                code.includes('input()') &&
+                inputArray.length === 1 &&
+                inputArray[0] === ''
+            ) {
+                reject(
+                    'The number of input given is less than what the code requires',
+                );
+            }
+            code = `import sys;inputs = sys.argv[1:]\n${code}`;
+            for (let i = 0; i < inputArray.length; i++) {
+                code = code.replace('input()', `inputs[${i}]`);
+            }
+            if (code.includes('input()')) {
+                reject(
+                    'The number of input given is less than what the code requires',
+                );
+            }
+            const inputArgs = inputArray.join(' ');
+            exec(`python -c '${code}' ${inputArgs}`, (err, stdout, stderr) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(stdout);
+                }
+            });
+        });
+    }
+
+    async checkRunCodeOutput(
+        problemId: string,
+        input: string,
+        output: string,
+    ): Promise<string> {
+        const examples = await this.problemsService.getExamplesById(problemId);
+
+        let correct = false;
+        let testedAtLeastOnce = false;
+
+        console.log(examples);
+
+        examples.testCases.forEach((example) => {
+            console.log(example.output);
+            if (example.input === input) {
+                testedAtLeastOnce = true;
+                if (example.output === output) {
+                    correct = true;
+                    return;
+                }
+            }
+        });
+
+        return !testedAtLeastOnce || correct ? 'correct' : 'incorrect';
     }
 }
