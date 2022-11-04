@@ -279,6 +279,17 @@ export class BattleService {
         return false;
     }
 
+    async updateBattleFinished(battleId: string) {
+        await this.prismaService.battle.update({
+            where: {
+                id: battleId,
+            },
+            data: {
+                finished: true,
+            },
+        });
+    }
+
     async deleteBattleInvitationByInviteCode(inviteCode) {
         await this.prismaService.battleInvitation.delete({
             where: {
@@ -515,10 +526,23 @@ export class BattleService {
         const correctTestCases = submissionTests.filter(
             (test) => test.outputType === 'correct',
         );
+        const correctness = correctTestCases.length;
+
+        if (correctness === 0) {
+            return await this.prismaService.battleEvaluation.create({
+                data: {
+                    userId,
+                    resultId,
+                    correctness,
+                    performance: 0,
+                    time: 0,
+                },
+            });
+        }
+
         const battleStartTime = (await this.getBattleById(submission.battleId))
             .startTime;
 
-        const correctness = correctTestCases.length;
         const performance =
             Math.round(
                 correctTestCases.reduce(
@@ -635,6 +659,14 @@ export class BattleService {
         winnerId: string,
     ) {
         const [player1, player2] = result.evaluations;
+
+        if (player1.correctness === 0 && player2.correctness === 0) {
+            return {
+                elo: 0,
+                player1Rating: player1.user.rating,
+                player2Rating: player2.user.rating,
+            };
+        }
 
         const player1Prob =
             1 / (1 + 10 ** ((player2.user.rating - player1.user.rating) / 400));

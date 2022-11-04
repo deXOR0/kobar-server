@@ -90,6 +90,15 @@ export class BattleGateway {
             };
         }
 
+        if (battle.finished) {
+            return {
+                event: 'battleNotJoinable',
+                data: {
+                    message: 'Battle has finished',
+                },
+            };
+        }
+
         // Battle is already started, rejoin the battle if the user was part of the battle
         if (await this.battleService.isBattleJoinable(battle, userId)) {
             client.join(inviteCode);
@@ -214,6 +223,10 @@ export class BattleGateway {
         if (battleDone) {
             const finalBattleResult =
                 await this.battleService.checkBattleWinner(battleResult.id);
+            await this.battleService.deleteBattleInvitationByInviteCode(
+                battle.inviteCode,
+            );
+            await this.battleService.updateBattleFinished(battleId);
             this.server
                 .to(battle.inviteCode)
                 .emit('battleFinished', { battleResult: finalBattleResult });

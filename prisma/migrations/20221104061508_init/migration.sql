@@ -45,6 +45,7 @@ CREATE TABLE "Battle" (
     "id" TEXT NOT NULL,
     "inviteCode" TEXT NOT NULL,
     "problemId" TEXT NOT NULL,
+    "finished" BOOLEAN NOT NULL DEFAULT false,
     "startTime" TIMESTAMP(3) NOT NULL,
     "endTime" TIMESTAMP(3) NOT NULL,
 

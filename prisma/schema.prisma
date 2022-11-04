@@ -54,6 +54,7 @@ model Battle {
   id          String           @id @default(uuid())
   inviteCode  String           @unique
   problemId   String
+  finished    Boolean          @default(false)
   problem     Problem          @relation(fields: [problemId], references: [id])
   users       UsersOnBattles[]
   startTime   DateTime
