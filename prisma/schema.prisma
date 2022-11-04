@@ -80,6 +80,7 @@ model SubmissionTest {
   order        Int
   output       String
   outputType   String
+  performance  Int
   submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
   testCase     TestCase   @relation(fields: [testCaseId], references: [id], onDelete: Cascade)
 }
@@ -108,9 +109,10 @@ model BattleEvaluation {
 model BattleResult {
   id          String             @id @default(uuid())
   battleId    String             @unique
-  winnerId    String
+  winnerId    String?
+  isDraw      Boolean            @default(false)
   score       Int
   battle      Battle             @relation(fields: [battleId], references: [id], onDelete: Cascade)
-  winner      User               @relation(fields: [winnerId], references: [id], onDelete: Cascade)
+  winner      User?              @relation(fields: [winnerId], references: [id], onDelete: Cascade)
   evaluations BattleEvaluation[]
 }

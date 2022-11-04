@@ -190,18 +190,33 @@ export class BattleGateway {
             battle.problemId,
         );
 
+        let battleResult = await this.battleService.getBattleResultByBattleId(
+            battleId,
+        );
+
+        const battleDone = !!battleResult;
+
+        if (!battleResult) {
+            battleResult = await this.battleService.createBattleResult(
+                battleId,
+            );
+        }
+
         const response = await this.battleService.submitCode(
             userId,
             battleId,
+            battleResult.id,
             problemId,
             code,
             testCases,
         );
 
-        const battleDone = await this.battleService.checkBattleDone(battleId);
-
         if (battleDone) {
-            this.server.to(battle.inviteCode).emit('battleFinished');
+            const finalBattleResult =
+                await this.battleService.checkBattleWinner(battleResult.id);
+            this.server
+                .to(battle.inviteCode)
+                .emit('battleFinished', { battleResult: finalBattleResult });
         } else {
             client.to(battle.inviteCode).emit('opponentSubmittedCode');
         }

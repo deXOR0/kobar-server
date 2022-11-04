@@ -70,6 +70,7 @@ CREATE TABLE "SubmissionTest" (
     "order" INTEGER NOT NULL,
     "output" TEXT NOT NULL,
     "outputType" TEXT NOT NULL,
+    "performance" INTEGER NOT NULL,
 
     CONSTRAINT "SubmissionTest_pkey" PRIMARY KEY ("id")
 );
@@ -99,7 +100,8 @@ CREATE TABLE "BattleEvaluation" (
 CREATE TABLE "BattleResult" (
     "id" TEXT NOT NULL,
     "battleId" TEXT NOT NULL,
-    "winnerId" TEXT NOT NULL,
+    "winnerId" TEXT,
+    "isDraw" BOOLEAN NOT NULL DEFAULT false,
     "score" INTEGER NOT NULL,
 
     CONSTRAINT "BattleResult_pkey" PRIMARY KEY ("id")
