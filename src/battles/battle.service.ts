@@ -565,6 +565,17 @@ export class BattleService {
         });
     }
 
+    async getBattleResultResponse(resultId: string) {
+        return await this.prismaService.battleResult.findUnique({
+            where: {
+                id: resultId,
+            },
+            include: {
+                evaluations: true,
+            },
+        });
+    }
+
     async updateBattleResult(
         resultId: string,
         winnerId: string,
@@ -694,6 +705,8 @@ export class BattleService {
         await this.updateUserRating(player1.userId, player1NewRating);
         await this.updateUserRating(player2.userId, player2NewRating);
 
-        return await this.updateBattleResult(resultId, winnerId, isDraw, score);
+        await this.updateBattleResult(resultId, winnerId, isDraw, score);
+
+        return await this.getBattleResultResponse(resultId);
     }
 }
