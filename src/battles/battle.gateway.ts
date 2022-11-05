@@ -16,6 +16,9 @@ import {
     SubmitCodeDto,
 } from './dto';
 import auth0Middleware from './authentication-gateway.middleware';
+import { UserService } from './user.service';
+import { BattleInvitationService } from './battle-invitation.service';
+import { CodeService } from './code.service';
 
 @WebSocketGateway({ namespace: 'battle', cors: true })
 export class BattleGateway {
@@ -27,7 +30,12 @@ export class BattleGateway {
     @WebSocketServer()
     server;
 
-    constructor(private readonly battleService: BattleService) {}
+    constructor(
+        private readonly battleService: BattleService,
+        private readonly userService: UserService,
+        private readonly battleInvitationService: BattleInvitationService,
+        private readonly codeService: CodeService,
+    ) {}
 
     async handleConnection(client: Socket) {
         await this.withAuthorization(client);
@@ -42,7 +50,7 @@ export class BattleGateway {
         client: Socket,
         data: ExchangeIdDto,
     ): Promise<WsResponse<unknown>> {
-        const user = await this.battleService.getOrCreateUser(data.auth0Id);
+        const user = await this.userService.getOrCreateUser(data.auth0Id);
 
         return { event: 'idExchanged', data: { userId: user.id } };
     }
@@ -53,7 +61,9 @@ export class BattleGateway {
         data: CreateBattleInvitationDto,
     ): Promise<WsResponse<unknown>> {
         const battleInvitation =
-            await this.battleService.createBattleInvitation(data.userId);
+            await this.battleInvitationService.createBattleInvitation(
+                data.userId,
+            );
         client.join(battleInvitation.inviteCode);
         return { event: 'battleInvitationCreated', data: battleInvitation };
     }
@@ -156,7 +166,7 @@ export class BattleGateway {
     async handleCancelBattle(client: Socket, data: CancelBattleDto) {
         const { battleId } = data;
         const battle = await this.battleService.deleteBattleById(battleId);
-        await this.battleService.deleteBattleInvitationByInviteCode(
+        await this.battleInvitationService.deleteBattleInvitationByInviteCode(
             battle.inviteCode,
         );
 
@@ -174,8 +184,8 @@ export class BattleGateway {
 
         try {
             client.to(battle.inviteCode).emit('opponentRunCode');
-            const output = await this.battleService.runCode(code, input);
-            const outputType = await this.battleService.checkRunCodeOutput(
+            const output = await this.codeService.runCode(code, input);
+            const outputType = await this.codeService.checkRunCodeOutput(
                 battle.problemId,
                 input,
                 output,
@@ -223,7 +233,7 @@ export class BattleGateway {
         if (battleDone) {
             const finalBattleResult =
                 await this.battleService.checkBattleWinner(battleResult.id);
-            await this.battleService.deleteBattleInvitationByInviteCode(
+            await this.battleInvitationService.deleteBattleInvitationByInviteCode(
                 battle.inviteCode,
             );
             await this.battleService.updateBattleFinished(battleId);
