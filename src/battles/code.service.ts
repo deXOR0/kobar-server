@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { exec } from 'child_process';
-import { PrismaService } from 'src/prisma.service';
 import { ProblemsService } from 'src/problems/problems.service';
 import {
     TestCase as TestCaseModel,
