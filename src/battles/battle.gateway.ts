@@ -22,10 +22,10 @@ import { CodeService } from './code.service';
 
 @WebSocketGateway({ namespace: 'battle', cors: true })
 export class BattleGateway {
-    withAuthorization = auth0Middleware(
-        'awesa.au.auth0.com',
-        'http://localhost:3000/invite',
-    );
+    AUTH0_DOMAIN = process.env.AUTH0_DOMAIN;
+    AUTH0_AUDIENCE = process.env.AUTH0_AUDIENCE;
+
+    withAuthorization = auth0Middleware(this.AUTH0_DOMAIN, this.AUTH0_AUDIENCE);
 
     @WebSocketServer()
     server;

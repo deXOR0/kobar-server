@@ -5,8 +5,8 @@ import { customAlphabet } from 'nanoid';
 
 @Injectable()
 export class BattleInvitationService {
-    BATTLE_ROOM_CODE_LENGTH = 5;
-    ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
+    BATTLE_ROOM_CODE_LENGTH = Number(process.env.BATTLE_ROOM_CODE_LENGTH);
+    ALPHABET = process.env.BATTLE_ROOM_CODE_ALPHABET;
     nanoid = customAlphabet(this.ALPHABET, this.BATTLE_ROOM_CODE_LENGTH);
 
     constructor(private readonly prismaService: PrismaService) {}

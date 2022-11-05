@@ -17,10 +17,10 @@ import { CodeService } from './code.service';
 
 @Injectable()
 export class BattleService {
-    BATTLE_LOBBY_TIME_SEC = 30;
-    BATTLE_DURATION_MIN = 10;
-    PLAYER_BASE_RATING = 1000;
-    ELO_K_FACTOR = 32;
+    BATTLE_LOBBY_TIME_SEC = Number(process.env.BATTLE_LOBBY_TIME_SEC);
+    BATTLE_DURATION_MIN = Number(process.env.BATTLE_DURATION_MIN);
+    PLAYER_BASE_RATING = Number(process.env.PLAYER_BASE_RATING);
+    ELO_K_FACTOR = Number(process.env.ELO_K_FACTOR);
 
     constructor(
         private readonly prismaService: PrismaService,
