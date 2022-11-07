@@ -246,7 +246,7 @@ export class BattleService {
     ): Promise<SubmissionTestModel> {
         let output: string;
         let outputType: string;
-        let code_performance: number;
+        let code_performance: number = 0;
 
         try {
             const start = performance.now();
