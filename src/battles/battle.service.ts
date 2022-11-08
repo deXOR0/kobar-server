@@ -43,7 +43,9 @@ export class BattleService {
                         user: {
                             select: {
                                 id: true,
-                                auth0Id: true,
+                                nickname: true,
+                                picture: true,
+                                rating: true,
                             },
                         },
                     },
@@ -57,7 +59,8 @@ export class BattleService {
             users: {
                 user: {
                     id: string;
-                    auth0Id: string;
+                    nickname: string;
+                    picture: string;
                 };
             }[];
         },
@@ -139,7 +142,9 @@ export class BattleService {
                 user: {
                     select: {
                         id: true,
-                        auth0Id: true,
+                        nickname: true,
+                        picture: true,
+                        rating: true,
                     },
                 },
             },

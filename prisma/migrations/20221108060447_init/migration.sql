@@ -2,6 +2,8 @@
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "auth0Id" TEXT NOT NULL,
+    "nickname" TEXT NOT NULL,
+    "picture" TEXT NOT NULL,
     "rating" INTEGER NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
