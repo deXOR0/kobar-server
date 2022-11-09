@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { User as UserModel } from '@prisma/client';
 import jwt_decode, { JwtPayload } from 'jwt-decode';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { BattleInvitation as BattleInvitationModel } from '@prisma/client';
 import { customAlphabet } from 'nanoid';
 

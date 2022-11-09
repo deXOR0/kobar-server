@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ProblemsService } from 'src/problems/problems.service';
+import { ProblemsService } from '../problems/problems.service';
 import { SubmissionTest as SubmissionTestModel } from '@prisma/client';
-import Lexer from 'src/gaul-lang/lexer';
-import Parser from 'src/gaul-lang/parser';
+import Lexer from '../gaul-lang/lexer';
+import Parser from '../gaul-lang/parser';
 
 @Injectable()
 export class CodeService {
