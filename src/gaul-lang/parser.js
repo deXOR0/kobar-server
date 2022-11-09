@@ -1,11 +1,11 @@
 import * as BinaryExpression from './nodes/binary-expression.js';
-import * as Literal from './nodes/literal.js';
-import * as Statement from './nodes/statement.js';
+import * as Literal from './nodes/Literal.js';
+import * as Statement from './nodes/Statement.js';
 import * as UnaryExpression from './nodes/unary-expression.js';
 import { ParseToken } from './tokens/parse-token.js';
 import { Keywords } from './keywords.js';
 import { Program } from './nodes/program.js';
-import { Variable } from './nodes/variable.js';
+import { Variable } from './nodes/Variable.js';
 
 export default class Parser {
     constructor(it) {
