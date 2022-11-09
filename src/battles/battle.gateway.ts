@@ -52,7 +52,15 @@ export class BattleGateway {
     ): Promise<WsResponse<unknown>> {
         const user = await this.userService.getOrCreateUser(data.auth0Id);
 
-        return { event: 'idExchanged', data: { userId: user.id } };
+        return {
+            event: 'idExchanged',
+            data: {
+                userId: user.id,
+                nickname: user.nickname,
+                picture: user.picture,
+                rating: user.rating,
+            },
+        };
     }
 
     @SubscribeMessage('createBattleInvitation')
