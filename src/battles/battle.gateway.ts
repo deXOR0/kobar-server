@@ -55,7 +55,7 @@ export class BattleGateway {
         return {
             event: 'idExchanged',
             data: {
-                userId: user.id,
+                id: user.id,
                 nickname: user.nickname,
                 picture: user.picture,
                 rating: user.rating,

@@ -25,9 +25,7 @@ export class UserService {
         });
     }
 
-    async createUser(auth0Id: string): Promise<UserModel> {
-        const payload: any = jwt_decode(auth0Id);
-
+    async createUser(payload: any): Promise<UserModel> {
         const { nickname, picture, sub } = payload;
 
         return this.prismaService.user.create({
@@ -40,13 +38,13 @@ export class UserService {
         });
     }
 
-    async getOrCreateUser(auth0Id: string): Promise<UserModel> {
-        const data: any = jwt_decode(auth0Id);
+    async getOrCreateUser(idToken: string): Promise<UserModel> {
+        const data: any = jwt_decode(idToken);
 
         let user = await this.getUserByAuth0Id(data.sub);
 
         if (!user) {
-            user = await this.createUser(auth0Id);
+            user = await this.createUser(data);
         }
 
         return user;
