@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { exec } from 'child_process';
 import { ProblemsService } from 'src/problems/problems.service';
-import {
-    TestCase as TestCaseModel,
-    Submission as SubmissionModel,
-    SubmissionTest as SubmissionTestModel,
-} from '@prisma/client';
+import { SubmissionTest as SubmissionTestModel } from '@prisma/client';
+import Lexer from 'src/gaul-lang/lexer';
+import Parser from 'src/gaul-lang/parser';
 
 @Injectable()
 export class CodeService {
@@ -13,33 +10,33 @@ export class CodeService {
 
     async runCode(code: string, input: string): Promise<string> {
         return new Promise(function (resolve, reject) {
-            let inputArray = input.trim().split('\n');
-            if (
-                code.includes('input()') &&
-                inputArray.length === 1 &&
-                inputArray[0] === ''
-            ) {
-                reject(
-                    'The number of input given is less than what the code requires',
-                );
+            let inputArray = [];
+            if (input.trim() !== '') {
+                inputArray = input
+                    .trim()
+                    .split('\n')
+                    .map((el) => {
+                        const val = Number(el);
+
+                        if (isNaN(val)) {
+                            return el;
+                        }
+
+                        return val;
+                    });
             }
-            code = `import sys;inputs = sys.argv[1:]\n${code}`;
-            for (let i = 0; i < inputArray.length; i++) {
-                code = code.replace('input()', `inputs[${i}]`);
+            try {
+                const tokens = new Lexer(code);
+                const parser = new Parser(tokens);
+
+                const ast = parser.parse();
+
+                ast.eval(inputArray);
+
+                resolve(ast.env.outputStream.join('\n'));
+            } catch (err) {
+                reject(String(err));
             }
-            if (code.includes('input()')) {
-                reject(
-                    'The number of input given is less than what the code requires',
-                );
-            }
-            const inputArgs = inputArray.join(' ');
-            exec(`python -c '${code}' ${inputArgs}`, (err, stdout, stderr) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(stdout);
-                }
-            });
         });
     }
 
