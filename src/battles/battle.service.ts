@@ -437,6 +437,22 @@ export class BattleService {
             },
             include: {
                 evaluations: true,
+                battle: {
+                    select: {
+                        users: {
+                            select: {
+                                user: {
+                                    select: {
+                                        id: true,
+                                        nickname: true,
+                                        picture: true,
+                                        rating: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             },
         });
     }
