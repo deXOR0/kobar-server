@@ -83,6 +83,18 @@ export class BattleGateway {
     ): Promise<WsResponse<unknown>> {
         const { userId, inviteCode } = data;
 
+        const inviteCodeValid =
+            await this.battleInvitationService.getBattleInvitation(inviteCode);
+
+        if (!inviteCodeValid) {
+            return {
+                event: 'battleNotJoinable',
+                data: {
+                    message: 'Invalid invite code',
+                },
+            };
+        }
+
         const battle = await this.battleService.getBattleByInviteCode(
             inviteCode,
         );
