@@ -172,7 +172,11 @@ export class BattleGateway {
             const problem = await this.battleService.getProblemAndExampleById(
                 battle.problemId,
             );
+            const users = await this.battleService.getUsersOnBattleById(
+                battleId,
+            );
             response.problem = problem;
+            response.users = users;
 
             this.server
                 .to(battle.inviteCode)
