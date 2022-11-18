@@ -254,13 +254,12 @@ export class BattleService {
         let code_performance: number = 0;
 
         try {
-            const start = performance.now();
-            output = await this.codeService.runCode(
+            const response = await this.codeService.runCode(
                 submission.code,
                 testCase.input,
             );
-            const end = performance.now();
-            code_performance = Math.round(end - start);
+            output = response.output;
+            code_performance = response.performance;
             outputType = testCase.output === output ? 'correct' : 'incorrect';
         } catch (err) {
             output = String(err);

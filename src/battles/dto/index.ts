@@ -4,3 +4,4 @@ export { RunCodeDto, SubmitCodeDto } from './code-submission.dto';
 export { ExchangeIdDto } from './exhange-id.dto';
 export { ReadyBattleDto } from './ready-battle.dto';
 export { CancelBattleDto } from './cancel-battle.dto';
+export { RunCodeResponseDto } from './run-code-response-dto';

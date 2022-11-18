@@ -208,7 +208,8 @@ export class BattleGateway {
 
         try {
             client.to(battle.inviteCode).emit('opponentRunCode');
-            const output = await this.codeService.runCode(code, input);
+            const response = await this.codeService.runCode(code, input);
+            const { output } = response;
             const outputType = await this.codeService.checkRunCodeOutput(
                 battle.problemId,
                 input,

@@ -1,15 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ProblemsService } from '../problems/problems.service';
 import { SubmissionTest as SubmissionTestModel } from '@prisma/client';
-import Lexer from '../gaul-lang/lexer';
-import Parser from '../gaul-lang/parser';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom, map } from 'rxjs';
+import { RunCodeResponseDto } from './dto';
 
 @Injectable()
 export class CodeService {
-    constructor(private readonly problemsService: ProblemsService) {}
+    constructor(
+        private readonly problemsService: ProblemsService,
+        private readonly httpService: HttpService,
+    ) {}
 
-    async runCode(code: string, input: string): Promise<string> {
-        return new Promise(function (resolve, reject) {
+    GAUL_LANG_SERVICE = process.env.GAUL_LANG_SERVICE;
+
+    async runCode(code: string, input: string): Promise<RunCodeResponseDto> {
+        const httpService = this.httpService;
+        const GAUL_LANG_SERVICE = this.GAUL_LANG_SERVICE;
+        return new Promise(async function (resolve, reject) {
             let inputArray = [];
             if (input.trim() !== '') {
                 inputArray = input
@@ -25,17 +33,19 @@ export class CodeService {
                         return val;
                     });
             }
-            try {
-                const tokens = new Lexer(code);
-                const parser = new Parser(tokens);
+            const { type, performance, output } = await firstValueFrom(
+                httpService
+                    .post(`${GAUL_LANG_SERVICE}/run`, {
+                        code,
+                        input: inputArray,
+                    })
+                    .pipe(map((res: any) => res.data)),
+            );
 
-                const ast = parser.parse();
-
-                ast.eval(inputArray);
-
-                resolve(ast.env.outputStream.join('\n'));
-            } catch (err) {
-                reject(String(err));
+            if (type === 'success') {
+                resolve({ output, performance });
+            } else {
+                reject(String(output));
             }
         });
     }

@@ -6,6 +6,7 @@ import { ProblemsModule } from '../problems/problems.module';
 import { UserService } from './user.service';
 import { CodeService } from './code.service';
 import { BattleInvitationService } from './battle-invitation.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
     providers: [
@@ -16,6 +17,6 @@ import { BattleInvitationService } from './battle-invitation.service';
         CodeService,
         BattleInvitationService,
     ],
-    imports: [ProblemsModule],
+    imports: [ProblemsModule, HttpModule],
 })
 export class BattlesModule {}
