@@ -245,6 +245,18 @@ export class BattleService {
         });
     }
 
+    async getUserSubmissionForBattle(
+        battleId: string,
+        userId: string,
+    ): Promise<SubmissionModel> {
+        return await this.prismaService.submission.findFirst({
+            where: {
+                battleId,
+                userId,
+            },
+        });
+    }
+
     async createSubmissionTest(
         submission: SubmissionModel,
         testCase: TestCaseModel,

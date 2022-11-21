@@ -228,6 +228,19 @@ export class BattleGateway {
     async handleSubmitCode(client: Socket, data: SubmitCodeDto) {
         const { userId, battleId, problemId, code } = data;
 
+        const existingSubmissionByUser =
+            await this.battleService.getUserSubmissionForBattle(
+                battleId,
+                userId,
+            );
+
+        if (existingSubmissionByUser) {
+            return {
+                event: 'submissionError',
+                data: { message: 'Can only submit once' },
+            };
+        }
+
         const battle = await this.battleService.getBattleById(battleId);
 
         const testCases = await this.battleService.getTestCasesById(
