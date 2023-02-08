@@ -98,9 +98,9 @@ Make sure you have these set up before you run the application
 ## Usage
 
 To run the application you can start a local server with hot reloading enter the command
-    ```
-    npm run start:dev
-    ```
+```
+npm run start:dev
+```
 
 ## Authors
 
