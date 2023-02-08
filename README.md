@@ -1,73 +1,107 @@
+<br/>
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+  <a href="https://github.com/deXOR0/kobar-server">
+    <img src="https://media.discordapp.net/attachments/846612997836505088/1072917704018763786/Kobar.png?width=676&height=676" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">Kobar Server</h3>
+
+  <p align="center">
+    Banyak menang, menang banyak
+    <br/>
+    <br/>
+    <a href="https://github.com/deXOR0/kobar-server">View Demo</a>
+  </p>
 </p>
+  
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+![](https://img.shields.io/badge/Auth0-EB5424.svg?style=for-the-badge&logo=Auth0&logoColor=white)
+![](https://img.shields.io/badge/Railway-0B0D0E.svg?style=for-the-badge&logo=Railway&logoColor=white)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Table Of Contents
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+* [About the Project](#about-the-project)
+* [Built With](#built-with)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+* [Authors](#authors)
+* [Acknowledgements](#acknowledgements)
 
-## Description
+## About The Project
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+![Screen Shot](https://media.discordapp.net/attachments/846612997836505088/1072918679668396052/Banner_Kobar.jpg?width=1440&height=360)
 
-## Installation
+KOBAR is an app that helps users to know the extent of their understanding of basic programming by using Indonesian pseudocode that is easy to understand. Users can measure the extent of their abilities by playing with friends and random people!
 
-```bash
-$ npm install
+Kobar has its own programming language called "Gaul-lang" which was designed to be easily understood by high-school students. It has Indonesian syntax and an easy-to-understand structure. 
+
+This is the back end of Kobar. It handles user authentication with the help of an authentication service provider and handles the battle system as well as the Gaul-lang compilation.
+
+## Built With
+
+Kobar Server is built with the NestJS framework to handle API requests from Kobar's mobile clients. Kobar Server provided real-time communications between the server and client using WebSocket technology.
+
+* [Node.js](https://nodejs.org/en/nes)
+* [NestJS](https://nestjs.com/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [Prisma](https://www.prisma.io/)
+* [Socket.IO](https://socket.io/)
+* [Auth0](https://auth0.com/)
+* [PostgreSQL](https://www.postgresql.org/)
+
+## Getting Started
+
+To get started, clone this repository through your favorite Git client, or by using 
+```
+git clone https://github.com/deXOR0/kobar-server.git
 ```
 
-## Running the app
+### Prerequisites
 
-```bash
-# development
-$ npm run start
+Make sure you have these set up before you run the application
+* Node.js
+* npm
+* postgresql@14
+* Auth0 account & project
 
-# watch mode
-$ npm run start:dev
+### Installation
 
-# production mode
-$ npm run start:prod
-```
+1. Install the dependencies
+    ```
+    npm install
+    ```
 
-## Test
+2. Provision a PostgreSQL database and put the credentials in the .env file
+    ```
+    DATABASE_URL = 'Your PostgreSQL Database URL"
+    ```
 
-```bash
-# unit tests
-$ npm run test
+3. Put the Auth0 project domain and audience in the .env file
+    ```
+    AUTH0_DOMAIN = 'Your AUTH0 Domain"
+    AUTH0_Audience = 'Your AUTH0 Audience"
+    ```
 
-# e2e tests
-$ npm run test:e2e
+4. Enter your API key in the .env file
+    ```
+    API_SECRET_KEY = 'Your API Key'
+    ```
 
-# test coverage
-$ npm run test:cov
-```
+## Usage
 
-## Support
+To run the application you can start a local server with hot reloading enter the command
+    ```
+    npm run start:dev
+    ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Authors
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+* **Atyanta Awesa Pambharu** - *Back-end Developer* - [Atyanta Awesa Pambharu](https://github.com/deXOR0/) - *Built authentication, websocket communication, and battle systems*
+* **Mohammad Salman Alfarisi** - *Gaul-lang Developer* - [Mohammad Salman Alfarisi](https://github.com/m-salman-a/) - *Built Gaul-lang implementation in JS*
