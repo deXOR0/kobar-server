@@ -70,7 +70,7 @@ Make sure you have these set up before you run the application
 * Node.js
 * npm
 * postgresql@14
-* Auth0 account & project
+* [Auth0 account & project](https://auth0.com/docs/get-started)
 
 ### Installation
 
@@ -81,13 +81,13 @@ Make sure you have these set up before you run the application
 
 2. Provision a PostgreSQL database and put the credentials in the .env file
     ```
-    DATABASE_URL = 'Your PostgreSQL Database URL"
+    DATABASE_URL = 'Your PostgreSQL Database URL'
     ```
 
 3. Put the Auth0 project domain and audience in the .env file
     ```
-    AUTH0_DOMAIN = 'Your AUTH0 Domain"
-    AUTH0_Audience = 'Your AUTH0 Audience"
+    AUTH0_DOMAIN = 'Your AUTH0 Domain'
+    AUTH0_Audience = 'Your AUTH0 Audience'
     ```
 
 4. Enter your API key in the .env file
