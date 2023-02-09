@@ -97,7 +97,7 @@ Make sure you have these set up before you run the application
 
 ## Usage
 
-To run the application you can start a local server with hot reloading enter the command
+To run the application you can start a local server with hot reloading enabled by entering this command
 ```
 npm run start:dev
 ```
