@@ -104,5 +104,5 @@ npm run start:dev
 
 ## Authors
 
-* **Atyanta Awesa Pambharu** - *Back-end Developer* - [Atyanta Awesa Pambharu](https://github.com/deXOR0/) - *Built authentication, websocket communication, and battle systems*
+* **Atyanta Awesa Pambharu** - *Back-end Developer* - [Atyanta Awesa Pambharu](https://github.com/deXOR0/) - *Built authentication, websocket communication, and battle systems, deploy and maintain production code to Railway service*
 * **Mohammad Salman Alfarisi** - *Gaul-lang Developer* - [Mohammad Salman Alfarisi](https://github.com/m-salman-a/) - *Built Gaul-lang implementation in JS*
