@@ -10,7 +10,7 @@
     Banyak menang, menang banyak
     <br/>
     <br/>
-    <a href="https://github.com/deXOR0/kobar-server">View Demo</a>
+    <a href="https://gaul-lang.up.railway.app/">Learn more about Kobar and Gaul-lang here</a>
   </p>
 </p>
 
