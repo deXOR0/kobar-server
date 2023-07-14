@@ -12,7 +12,7 @@ import {
 import { ProblemsService } from 'src/problems/problems.service';
 import { performance } from 'perf_hooks';
 import { BattleInvitationService } from './battle-invitation.service';
-import { UserService } from './user.service';
+import { UserService } from '../user/user.service';
 import { CodeService } from './code.service';
 
 @Injectable()

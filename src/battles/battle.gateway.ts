@@ -16,7 +16,7 @@ import {
     SubmitCodeDto,
 } from './dto';
 import auth0Middleware from './authentication-gateway.middleware';
-import { UserService } from './user.service';
+import { UserService } from '../user/user.service';
 import { BattleInvitationService } from './battle-invitation.service';
 import { CodeService } from './code.service';
 

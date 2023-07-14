@@ -14,7 +14,7 @@ declare module 'socket.io' {
 type SocketIOMiddlewareFactory = (
     domain?: string,
     audience?: string,
-) => (socket: Socket) => void;
+) => (socket: Socket | any) => void;
 
 const auth0Middleware: SocketIOMiddlewareFactory = (
     domainParam: string,
