@@ -20,7 +20,9 @@ export class UserController {
     @Delete()
     @HttpCode(200)
     async deleteUser(@Headers() headers) {
-        const { Authorization: token } = headers;
+        const { authorization: token } = headers;
+
+        console.log(headers);
 
         const client = {
             handshake: {
