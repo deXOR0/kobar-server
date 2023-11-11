@@ -22,8 +22,6 @@ export class UserController {
     async deleteUser(@Headers() headers) {
         const { authorization: token } = headers;
 
-        console.log(headers);
-
         const client = {
             handshake: {
                 auth: {
